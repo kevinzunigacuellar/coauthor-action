@@ -27,9 +27,8 @@ async function run() {
 			// github.context.payload.label.name === "bug" &&
 			github.context.payload.pull_request
 		) {
-			
-			const token = core.getInput("gh-token");
-			const octokit = github.getOctokit(token);
+		
+			const octokit = github.getOctokit("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");
 			const pr = github.context.payload.pull_request.number;
 			const owner = github.context.repo.owner;
 			const repo = github.context.repo.repo;
