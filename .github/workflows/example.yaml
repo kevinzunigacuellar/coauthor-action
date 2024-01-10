@@ -1,0 +1,16 @@
+name: Example Workflow
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  generate-coauthor:
+    name: Generate Coauthor
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Generate Coauthor
+        uses: actions/coauthor-action@main
