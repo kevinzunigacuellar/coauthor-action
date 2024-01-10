@@ -41,8 +41,9 @@ async function run() {
 				pr,
 			});
 
-			console.log(result);
-			console.log(author)
+			// console.log(result);
+			// console.log(author)
+			core.debug(author);
 		}
 	} catch (error) {
 		if (error instanceof Error) {
