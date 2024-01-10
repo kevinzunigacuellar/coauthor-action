@@ -15,3 +15,5 @@ jobs:
 
       - name: Generate Coauthor
         uses: kevinzunigacuellar/coauthor-action@pr1
+        with:
+          gh_token: ${{ secrets.GH_TOKEN }}
