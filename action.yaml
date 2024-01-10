@@ -1,0 +1,12 @@
+name: coauthor-action
+description: Generate a coauthor commit message
+author: Kevin Zuniga Cuellar
+
+# Add your action's branding here. This will appear on the GitHub Marketplace.
+branding:
+  icon: 'heart'
+  color: 'red'
+
+runs:
+  using: node20
+  main: dist/index.js
