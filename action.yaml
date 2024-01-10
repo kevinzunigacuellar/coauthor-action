@@ -12,6 +12,7 @@ inputs:
   gh_token:
     description: 'Github token'
     required: true
+    default: ${{ secrets.GITHUB_TOKEN }}
 runs:
   using: node20
   main: dist/index.js
