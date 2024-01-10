@@ -16,4 +16,4 @@ jobs:
       - name: Generate Coauthor
         uses: ./
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.TOKEN }}
