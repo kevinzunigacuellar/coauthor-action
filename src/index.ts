@@ -42,7 +42,7 @@ async function run() {
 			});
 
 			console.log(result);
-			core.debug(author);
+			console.log(author);
 		}
 	} catch (error) {
 		if (error instanceof Error) {
