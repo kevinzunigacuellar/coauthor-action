@@ -30674,26 +30674,43 @@ var __webpack_exports__ = {};
 /* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
 
 
+const query = `
+query participants($owner: String!, $repo: String!, $pr: Int!, $first: Int = 100) {
+  repository(owner: $owner, name: $repo) {
+    pullRequest(number: $pr) {
+      author {
+        login
+      }
+      participants(first: $first) {
+        nodes {
+          name,
+          login,
+          databaseId,
+          avatarUrl,
+        }
+      }
+    }
+  }
+}`;
 async function run() {
     try {
-        // The `who-to-greet` input is defined in action metadata file
-        // 	const whoToGreet = core.getInput("who-to-greet", { required: true });
-        // 	core.info(`Hello, ${whoToGreet}!`);
-        // 	// Get the current time and set as an output
-        // 	const time = new Date().toTimeString();
-        // 	core.setOutput("time", time);
-        // 	// Output the payload for debugging
-        // 	core.info(
-        // 		`The event payload: ${JSON.stringify(github.context.payload, null, 2)}`,
-        // 	);
-        // } catch (error) {
-        // 	// Fail the workflow step if an error occurs
-        // 	core.setFailed(error.message);
-        // const token = core.getInput("repo-token")
-        // const octokit = github.getOctokit(token)
-        const context = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context;
-        console.log(context);
-        // const result = await octokit.graphql("query", "variables");
+        if (_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.action === "labeled" &&
+            _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request) {
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug("Starting");
+            const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("repo-token", { required: true });
+            const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(token);
+            const pr = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number;
+            const owner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner;
+            const repo = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo;
+            const author = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.user.login;
+            const result = await octokit.graphql(query, {
+                owner,
+                repo,
+                pr,
+            });
+            console.log(result);
+            console.log(author);
+        }
     }
     catch (error) {
         if (error instanceof Error) {

@@ -24,10 +24,9 @@ async function run() {
 	try {
 		if (
 			github.context.payload.action === "labeled" &&
-			github.context.payload.label.name === "bug" &&
 			github.context.payload.pull_request
 		) {
-			
+			core.debug("Starting");
 			const token = core.getInput("repo-token", { required: true });
 			const octokit = github.getOctokit(token);
 			const pr = github.context.payload.pull_request.number;
@@ -43,15 +42,6 @@ async function run() {
 
 			console.log(result);
 			console.log(author)
-
-    // const participants = (result.repository.pullRequest.participants.nodes ?? [])
-    //   .map(({ name, login, databaseId }) => ({
-    //     name,
-    //     login,
-    //     id: databaseId,
-    //   }))
-    //   // remove the author from the list of participants
-    //   .filter((p) => p.login !== authorLogin);
 			
 		}
 	} catch (error) {
