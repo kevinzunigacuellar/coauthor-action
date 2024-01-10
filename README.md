@@ -8,7 +8,7 @@ A GitHub Action to generate a list of coauthors from a pull request using a labe
 name: Write coauthors to pull request
 on:
   pull_request:
-    types: [labelled]
+    types: [labeled]
 permissions:
   pull-requests: write
 jobs:
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: kevinzunigacuellar/generate-coauthors@main
+      - uses: kevinzunigacuellar/coauthor-action@main
 ```
 
 ## Inputs
