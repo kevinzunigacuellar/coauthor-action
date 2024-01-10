@@ -1,4 +1,4 @@
-name: Commit coauthor to pull request
+name: Generate coauthors for a PR
 
 on:
   pull_request:
@@ -10,9 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Generate Coauthor
         uses: ./
         with:
