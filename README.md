@@ -1,6 +1,6 @@
 # Generate coauthors
 
-A GitHub Action to generate a list of coauthors from a pull request using a label.
+A GitHub Action to generate a list of coauthors from a pull request using a label. The coauthor string is written to the pull request as a comment.
 
 ## Usage
 
