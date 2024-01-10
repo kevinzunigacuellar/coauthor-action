@@ -22,29 +22,30 @@ query participants($owner: String!, $repo: String!, $pr: Int!, $first: Int = 100
 
 async function run() {
 	try {
-		if (
-			github.context.payload.action === "labeled" &&
-			// github.context.payload.label.name === "bug" &&
-			github.context.payload.pull_request
-		) {
+		// if (
+		// 	github.context.payload.action === "labeled" &&
+		// 	// github.context.payload.label.name === "bug" &&
+		// 	github.context.payload.pull_request
+		// ) {
 			
-			const token = core.getInput("repo-token", { required: true });
-			const octokit = github.getOctokit(token);
-			const pr = github.context.payload.pull_request.number;
-			const owner = github.context.repo.owner;
-			const repo = github.context.repo.repo;
-			const author = github.context.payload.pull_request.user.login;
+		// 	const token = core.getInput("repo-token", { required: true });
+		// 	const octokit = github.getOctokit(token);
+		// 	const pr = github.context.payload.pull_request.number;
+		// 	const owner = github.context.repo.owner;
+		// 	const repo = github.context.repo.repo;
+		// 	const author = github.context.payload.pull_request.user.login;
 
-			const result = await octokit.graphql(query, {
-				owner,
-				repo,
-				pr,
-			});
+		// 	const result = await octokit.graphql(query, {
+		// 		owner,
+		// 		repo,
+		// 		pr,
+		// 	});
 
-			// console.log(result);
-			// console.log(author)
-			core.debug(author);
-		}
+		// 	// console.log(result);
+		// 	// console.log(author)
+		// 	core.debug(author);
+		// }
+		core.debug("Hello World!");
 	} catch (error) {
 		if (error instanceof Error) {
 			core.setFailed(error.message);
