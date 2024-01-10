@@ -28,7 +28,7 @@ async function run() {
 			github.context.payload.pull_request
 		) {
 			
-			const token = core.getInput("gh-token", { required: true });
+			const token = core.getInput("gh-token");
 			const octokit = github.getOctokit(token);
 			const pr = github.context.payload.pull_request.number;
 			const owner = github.context.repo.owner;
