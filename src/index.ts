@@ -43,16 +43,6 @@ async function run() {
 
 			console.log(result);
 			console.log(author)
-
-    // const participants = (result.repository.pullRequest.participants.nodes ?? [])
-    //   .map(({ name, login, databaseId }) => ({
-    //     name,
-    //     login,
-    //     id: databaseId,
-    //   }))
-    //   // remove the author from the list of participants
-    //   .filter((p) => p.login !== authorLogin);
-			
 		}
 	} catch (error) {
 		if (error instanceof Error) {
