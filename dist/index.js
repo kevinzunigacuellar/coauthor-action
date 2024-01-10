@@ -30697,7 +30697,8 @@ async function run() {
         if (_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.action === "labeled" &&
             _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request) {
             _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug("Starting");
-            const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("repo-token", { required: true });
+            const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("token", { required: true });
+            _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug("Got token");
             const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(token);
             const pr = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number;
             const owner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner;

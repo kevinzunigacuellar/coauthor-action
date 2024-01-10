@@ -27,7 +27,8 @@ async function run() {
 			github.context.payload.pull_request
 		) {
 			core.debug("Starting");
-			const token = core.getInput("repo-token", { required: true });
+			const token = core.getInput("token", { required: true });
+			core.debug("Got token");
 			const octokit = github.getOctokit(token);
 			const pr = github.context.payload.pull_request.number;
 			const owner = github.context.repo.owner;

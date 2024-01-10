@@ -7,6 +7,11 @@ branding:
   icon: 'heart'
   color: 'red'
 
+inputs:
+  token:
+    description: 'The GitHub token to use'
+    required: true
+
 runs:
   using: node20
   main: dist/index.js
