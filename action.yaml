@@ -10,9 +10,8 @@ branding:
 
 inputs:
   gh_token:
-    description: 'Github token'
+    description: 'Github token to use for authentication'
     required: true
-    default: ${{ secrets.GITHUB_TOKEN }}
 runs:
   using: node20
   main: dist/index.js
