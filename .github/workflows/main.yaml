@@ -1,5 +1,8 @@
-name: Commit coauthor to pull request
+name: Generate coauthors for a PR
 
+permissions:
+  pull-requests: write
+  
 on:
   pull_request:
     types: [labeled]
@@ -10,10 +13,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Generate Coauthor
         uses: ./
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
