@@ -41,7 +41,7 @@ async function run() {
 				pr,
 			});
 
-			console.log(result);
+			console.log(JSON.stringify(result, null, 2));
 			console.log(author)
 			
 		}
