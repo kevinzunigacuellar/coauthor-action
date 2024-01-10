@@ -30694,6 +30694,7 @@ async function run() {
         const pr = prContext.number;
         const author = prContext.user.login;
         const { owner, repo } = github.context.repo;
+        core.info(`Getting participants for PR #${pr}`);
         const data = await octokit.graphql(query, {
             owner,
             repo,
@@ -30711,8 +30712,19 @@ async function run() {
             core.notice("No participants found");
             return;
         }
+        core.info("Creating coauthor string");
         const coauthorString = participants.map(createCoauthorString).join("\n");
-        core.setOutput("commit-message", coauthorString);
+        core.info(`Creating comment on PR #${pr}`);
+        const commentBody = `
+		\`\`\`
+		${coauthorString}
+		\`\`\``;
+        octokit.rest.issues.createComment({
+            owner,
+            repo,
+            issue_number: pr,
+            body: commentBody,
+        });
     }
     catch (error) {
         if (error instanceof Error)

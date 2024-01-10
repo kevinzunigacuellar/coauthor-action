@@ -14,10 +14,6 @@ inputs:
     description: 'The label to trigger the action'
     default: 'add-coauthors'
 
-outputs:
-  commit-message:
-    description: 'Coauthor commit message'
-
 runs:
   using: node20
   main: dist/index.js
