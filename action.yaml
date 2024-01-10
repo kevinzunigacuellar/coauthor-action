@@ -12,6 +12,8 @@ inputs:
   gh_token:
     description: 'Github token to use for authentication'
     required: true
+    default: ${{ github.token }}
+
 runs:
   using: node20
   main: dist/index.js
