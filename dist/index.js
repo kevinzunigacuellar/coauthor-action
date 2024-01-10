@@ -30686,31 +30686,43 @@ query participants($owner: String!, $repo: String!, $pr: Int!, $first: Int = 100
           name,
           login,
           databaseId,
-          avatarUrl,
         }
       }
     }
   }
 }`;
+function createCoauthorString(user) {
+    return `Co-authored-by: ${user.name ?? user.login} <${user.id}+${user.login}@users.noreply.github.com>`;
+}
 async function run() {
     try {
         if (_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.action === "labeled" &&
             _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug("Starting");
             const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("token", { required: true });
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.debug("Got token");
             const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(token);
             const pr = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number;
             const owner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner;
             const repo = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo;
             const author = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.user.login;
-            const result = await octokit.graphql(query, {
+            const data = await octokit.graphql(query, {
                 owner,
                 repo,
                 pr,
             });
-            console.log(JSON.stringify(result, null, 2));
-            console.log(author);
+            const participants = (data.repository.pullRequest.participants.nodes ?? [])
+                .map(({ name, login, databaseId }) => ({
+                name,
+                login,
+                id: databaseId,
+            }))
+                // remove the author from the list of participants
+                .filter((p) => p.login !== author);
+            if (participants.length === 0) {
+                _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("No participants found");
+                return;
+            }
+            const coauthors = participants.map(createCoauthorString).join("\n");
+            console.log(coauthors);
         }
     }
     catch (error) {
