@@ -26,12 +26,10 @@ async function run() {
 
 		const token = core.getInput("token", { required: true });
 		const octokit = github.getOctokit(token);
-
 		const pr = prContext.number;
 		const author = prContext.user.login;
 		const { owner, repo } = github.context.repo;
 
-		core.info(`Getting participants for PR #${pr}`);
 		const data: GH_Response = await octokit.graphql(query, {
 			owner,
 			repo,
@@ -51,19 +49,17 @@ async function run() {
 			core.notice("No participants found");
 			return;
 		}
-		core.info("Creating coauthor string");
+		core.info(`Found ${participants.length} co-authors`);
 		const coauthorString = participants.map(createCoauthorString).join("\n");
-
-		core.info(`Creating comment on PR #${pr}`);
+		core.info("Created coauthor string");
 		const commentBody = `\`\`\`\n${coauthorString}\n\`\`\``;
-
-		octokit.rest.issues.createComment({
+		const { data: comment } = await octokit.rest.issues.createComment({
 			owner,
 			repo,
 			issue_number: pr,
 			body: commentBody,
 		});
-		
+		core.info(`Created comment id '${comment.id}' on pull request '${pr}'.`);
 	} catch (error) {
 		if (error instanceof Error) core.setFailed(error.message);
 	}

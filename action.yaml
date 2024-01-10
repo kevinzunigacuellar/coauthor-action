@@ -8,8 +8,8 @@ branding:
 
 inputs:
   token:
-    description: 'The GitHub token to use'
-    required: true
+    description: 'GITHUB_TOKEN or a repo scoped PAT.'
+    default: ${{ github.token }}
   label:
     description: 'The label to trigger the action'
     default: 'add-coauthors'

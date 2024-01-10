@@ -15,5 +15,3 @@ jobs:
         uses: actions/checkout@v4
       - name: Generate Coauthor
         uses: ./
-        with:
-          token: ${{ secrets.TOKEN }}
