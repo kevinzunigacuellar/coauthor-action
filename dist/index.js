@@ -30698,6 +30698,7 @@ async function run() {
             // github.context.payload.label.name === "bug" &&
             _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request) {
             const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("gh-token");
+            console.log(token);
             const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(token);
             const pr = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number;
             const owner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner;
