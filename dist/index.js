@@ -30631,35 +30631,6 @@ module.exports = parseParams
 /******/ }
 /******/ 
 /************************************************************************/
-/******/ /* webpack/runtime/compat get default export */
-/******/ (() => {
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__nccwpck_require__.n = (module) => {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			() => (module['default']) :
-/******/ 			() => (module);
-/******/ 		__nccwpck_require__.d(getter, { a: getter });
-/******/ 		return getter;
-/******/ 	};
-/******/ })();
-/******/ 
-/******/ /* webpack/runtime/define property getters */
-/******/ (() => {
-/******/ 	// define getter functions for harmony exports
-/******/ 	__nccwpck_require__.d = (exports, definition) => {
-/******/ 		for(var key in definition) {
-/******/ 			if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 				Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 			}
-/******/ 		}
-/******/ 	};
-/******/ })();
-/******/ 
-/******/ /* webpack/runtime/hasOwnProperty shorthand */
-/******/ (() => {
-/******/ 	__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ })();
-/******/ 
 /******/ /* webpack/runtime/compat */
 /******/ 
 /******/ if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = new URL('.', import.meta.url).pathname.slice(import.meta.url.match(/^file:\/\/\/\w:/) ? 1 : 0, -1) + "/";
@@ -30668,12 +30639,12 @@ module.exports = parseParams
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0__ = __nccwpck_require__(9093);
-/* harmony import */ var _actions_core__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__nccwpck_require__.n(_actions_core__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1__ = __nccwpck_require__(5942);
-/* harmony import */ var _actions_github__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__nccwpck_require__.n(_actions_github__WEBPACK_IMPORTED_MODULE_1__);
 
-
+// EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@1.10.1/node_modules/@actions/core/lib/core.js
+var core = __nccwpck_require__(9093);
+// EXTERNAL MODULE: ./node_modules/.pnpm/@actions+github@6.0.0/node_modules/@actions/github/lib/github.js
+var github = __nccwpck_require__(5942);
+;// CONCATENATED MODULE: ./src/constants.ts
 const query = `
 query participants($owner: String!, $repo: String!, $pr: Int!, $first: Int = 100) {
   repository(owner: $owner, name: $repo) {
@@ -30691,44 +30662,61 @@ query participants($owner: String!, $repo: String!, $pr: Int!, $first: Int = 100
     }
   }
 }`;
+
+;// CONCATENATED MODULE: ./src/utils.ts
 function createCoauthorString(user) {
     return `Co-authored-by: ${user.name ?? user.login} <${user.id}+${user.login}@users.noreply.github.com>`;
 }
+
+;// CONCATENATED MODULE: ./src/index.ts
+
+
+
+
 async function run() {
+    const label = core.getInput("label");
+    const prContext = github.context.payload.pull_request;
     try {
-        if (_actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.action === "labeled" &&
-            _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request) {
-            const token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("token", { required: true });
-            const octokit = _actions_github__WEBPACK_IMPORTED_MODULE_1__.getOctokit(token);
-            const pr = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.number;
-            const owner = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner;
-            const repo = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo;
-            const author = _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.payload.pull_request.user.login;
-            const data = await octokit.graphql(query, {
-                owner,
-                repo,
-                pr,
-            });
-            const participants = (data.repository.pullRequest.participants.nodes ?? [])
-                .map(({ name, login, databaseId }) => ({
-                name,
-                login,
-                id: databaseId,
-            }))
-                // remove the author from the list of participants
-                .filter((p) => p.login !== author);
-            if (participants.length === 0) {
-                _actions_core__WEBPACK_IMPORTED_MODULE_0__.info("No participants found");
-                return;
-            }
-            const coauthors = participants.map(createCoauthorString).join("\n");
-            console.log(coauthors);
+        if (github.context.payload.action !== "labeled") {
+            core.notice("Skipping, not a label event");
+            return;
         }
+        if (github.context.payload.label.name !== label) {
+            core.notice("Skipping, label does not match");
+            return;
+        }
+        if (!prContext) {
+            core.notice("Skipping, missing pull request context");
+            return;
+        }
+        const token = core.getInput("token", { required: true });
+        const octokit = github.getOctokit(token);
+        const pr = prContext.number;
+        const author = prContext.user.login;
+        const { owner, repo } = github.context.repo;
+        const data = await octokit.graphql(query, {
+            owner,
+            repo,
+            pr,
+        });
+        const participants = (data.repository.pullRequest.participants.nodes ?? [])
+            .map(({ name, login, databaseId }) => ({
+            name,
+            login,
+            id: databaseId,
+        }))
+            // remove the author from the list of participants
+            .filter((p) => p.login !== author);
+        if (participants.length === 0) {
+            core.notice("No participants found");
+            return;
+        }
+        const coauthorString = participants.map(createCoauthorString).join("\n");
+        core.setOutput("commit-message", coauthorString);
     }
     catch (error) {
-        if (error instanceof Error) {
-            _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(error.message);
-        }
+        if (error instanceof Error)
+            core.setFailed(error.message);
     }
 }
 run();
