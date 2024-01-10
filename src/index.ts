@@ -24,7 +24,7 @@ async function run() {
 	try {
 		if (
 			github.context.payload.action === "labeled" &&
-			github.context.payload.label.name === "bug" &&
+			// github.context.payload.label.name === "bug" &&
 			github.context.payload.pull_request
 		) {
 			
