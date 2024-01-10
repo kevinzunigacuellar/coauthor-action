@@ -1,29 +1,59 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
+const query = `
+query participants($owner: String!, $repo: String!, $pr: Int!, $first: Int = 100) {
+  repository(owner: $owner, name: $repo) {
+    pullRequest(number: $pr) {
+      author {
+        login
+      }
+      participants(first: $first) {
+        nodes {
+          name,
+          login,
+          databaseId,
+          avatarUrl,
+        }
+      }
+    }
+  }
+}`
+
 async function run() {
 	try {
-		// The `who-to-greet` input is defined in action metadata file
-		// 	const whoToGreet = core.getInput("who-to-greet", { required: true });
-		// 	core.info(`Hello, ${whoToGreet}!`);
+		if (
+			github.context.payload.action === "labeled" &&
+			github.context.payload.label.name === "bug" &&
+			github.context.payload.pull_request
+		) {
+			
+			const token = core.getInput("repo-token", { required: true });
+			const octokit = github.getOctokit(token);
+			const pr = github.context.payload.pull_request.number;
+			const owner = github.context.repo.owner;
+			const repo = github.context.repo.repo;
+			const author = github.context.payload.pull_request.user.login;
 
-		// 	// Get the current time and set as an output
-		// 	const time = new Date().toTimeString();
-		// 	core.setOutput("time", time);
+			const result = await octokit.graphql(query, {
+				owner,
+				repo,
+				pr,
+			});
 
-		// 	// Output the payload for debugging
-		// 	core.info(
-		// 		`The event payload: ${JSON.stringify(github.context.payload, null, 2)}`,
-		// 	);
-		// } catch (error) {
-		// 	// Fail the workflow step if an error occurs
-		// 	core.setFailed(error.message);
+			console.log(result);
+			console.log(author)
 
-		// const token = core.getInput("repo-token")
-		// const octokit = github.getOctokit(token)
-		const context = github.context;
-		console.log(context);
-		// const result = await octokit.graphql("query", "variables");
+    // const participants = (result.repository.pullRequest.participants.nodes ?? [])
+    //   .map(({ name, login, databaseId }) => ({
+    //     name,
+    //     login,
+    //     id: databaseId,
+    //   }))
+    //   // remove the author from the list of participants
+    //   .filter((p) => p.login !== authorLogin);
+			
+		}
 	} catch (error) {
 		if (error instanceof Error) {
 			core.setFailed(error.message);
