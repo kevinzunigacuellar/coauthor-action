@@ -55,10 +55,7 @@ async function run() {
 		const coauthorString = participants.map(createCoauthorString).join("\n");
 
 		core.info(`Creating comment on PR #${pr}`);
-		const commentBody = `
-		\`\`\`
-		${coauthorString}
-		\`\`\``;
+		const commentBody = `\`\`\`\n${coauthorString}\n\`\`\``;
 
 		octokit.rest.issues.createComment({
 			owner,
@@ -66,6 +63,7 @@ async function run() {
 			issue_number: pr,
 			body: commentBody,
 		});
+		
 	} catch (error) {
 		if (error instanceof Error) core.setFailed(error.message);
 	}

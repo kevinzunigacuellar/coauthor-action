@@ -30715,10 +30715,7 @@ async function run() {
         core.info("Creating coauthor string");
         const coauthorString = participants.map(createCoauthorString).join("\n");
         core.info(`Creating comment on PR #${pr}`);
-        const commentBody = `
-		\`\`\`
-		${coauthorString}
-		\`\`\``;
+        const commentBody = `\`\`\`\n${coauthorString}\n\`\`\``;
         octokit.rest.issues.createComment({
             owner,
             repo,
