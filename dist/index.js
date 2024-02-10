@@ -30657,6 +30657,7 @@ query participants($owner: String!, $repo: String!, $pr: Int!, $first: Int = 100
           name,
           login,
           databaseId,
+          email,
         }
       }
     }
@@ -30665,7 +30666,8 @@ query participants($owner: String!, $repo: String!, $pr: Int!, $first: Int = 100
 
 ;// CONCATENATED MODULE: ./src/utils.ts
 function createCoauthorString(user) {
-    return `Co-authored-by: ${user.name ?? user.login} <${user.id}+${user.login}@users.noreply.github.com>`;
+    const email = user.email || `${user.id}+${user.login}@users.noreply.github.com`;
+    return `Co-authored-by: ${user.name ?? user.login} <${email}>`;
 }
 
 ;// CONCATENATED MODULE: ./src/index.ts
@@ -30674,31 +30676,34 @@ function createCoauthorString(user) {
 
 
 async function run() {
-    const prContext = github.context.payload.issue;
+    // Check if the comment contains the trigger word
+    if (github.context.payload.comment?.body !== "!coauthors") {
+        core.notice("Skipping, comment does not contain '!coauthors'");
+        return;
+    }
+    // Get context data
+    const token = core.getInput("token", { required: true });
+    const octokit = github.getOctokit(token);
+    const pr = github.context.payload.issue?.number;
+    const author = github.context.payload.comment?.user.login;
+    const { owner, repo } = github.context.repo;
+    // Check for required context data
+    if (!pr || !author || !owner || !repo) {
+        core.setFailed("Could not get pull request number, author, owner or repo");
+        return;
+    }
     try {
-        if (github.context.payload.comment?.body !== "!coauthors") {
-            core.notice("Skipping, comment does not contain '!coauthors'");
-            return;
-        }
-        if (!prContext) {
-            core.notice("Skipping, missing pull request context.");
-            return;
-        }
-        const token = core.getInput("token", { required: true });
-        const octokit = github.getOctokit(token);
-        const pr = prContext.number;
-        const author = prContext.user.login;
-        const { owner, repo } = github.context.repo;
         const data = await octokit.graphql(query, {
             owner,
             repo,
             pr,
         });
         const participants = (data.repository.pullRequest.participants.nodes ?? [])
-            .map(({ name, login, databaseId }) => ({
+            .map(({ name, login, databaseId, email }) => ({
             name,
             login,
             id: databaseId,
+            email,
         }))
             // remove the author from the list of participants
             .filter((p) => p.login !== author);

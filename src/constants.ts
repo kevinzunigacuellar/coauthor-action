@@ -10,6 +10,7 @@ query participants($owner: String!, $repo: String!, $pr: Int!, $first: Int = 100
           name,
           login,
           databaseId,
+          email,
         }
       }
     }

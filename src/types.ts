@@ -6,6 +6,7 @@ export interface GH_Response {
 					name: string;
 					login: string;
 					databaseId: number;
+					email: string;
 				}[];
 			};
 		};
