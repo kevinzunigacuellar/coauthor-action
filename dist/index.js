@@ -30709,7 +30709,7 @@ async function run() {
             // remove the author from the list of participants
             .filter((p) => p.login !== author);
         if (participants.length === 0) {
-            core.notice("No participants found");
+            core.notice("No co-authors found");
             return;
         }
         core.info(`Found ${participants.length} co-authors`);

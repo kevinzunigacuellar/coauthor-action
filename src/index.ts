@@ -46,7 +46,7 @@ async function run() {
 			.filter((p) => p.login !== author);
 
 		if (participants.length === 0) {
-			core.notice("No participants found");
+			core.notice("No co-authors found");
 			return;
 		}
 		core.info(`Found ${participants.length} co-authors`);
