@@ -18,6 +18,7 @@ async function run() {
 		// 	core.notice("Skipping, label does not match");
 		// 	return;
 		// }
+		
 		console.log("comment", github.context.payload.comment);
 		if (!prContext) {
 			core.notice("Skipping, missing pull request context");
