@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: kevinzunigacuellar/coauthor-action@main
+      - uses: kevinzunigacuellar/coauthor-action@v0.1
 ```
 
 ## Inputs
