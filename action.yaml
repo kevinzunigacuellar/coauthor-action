@@ -10,6 +10,9 @@ inputs:
   token:
     description: 'GITHUB_TOKEN or a repo scoped PAT.'
     default: ${{ github.token }}
+  trigger-phrase:
+    description: 'The phrase that triggers the action.'
+    default: '!coauthor'
 
 runs:
   using: node20

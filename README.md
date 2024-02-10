@@ -1,18 +1,23 @@
 # Generate coauthors
 
-A GitHub Action to generate a list of coauthors from a pull request using a label. The coauthor string is written to the pull request as a comment.
+A GitHub Action that generates a list of coauthors from a pull request and writes them to a comment.
 
 ## Usage
 
 ```yaml
-name: Write coauthors to pull request
-on:
-  pull_request:
-    types: [labeled]
+name: Write coauthors to a pull request
 permissions:
   pull-requests: write
+  
+on:
+  issue_comment:
+    types:
+      - created
+      
 jobs:
   generate-coauthors:
+    name: Generate Coauthor
+    if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +26,7 @@ jobs:
 
 ## Inputs
 
-| Name    | Description                                               | Default         |
-| ------- | --------------------------------------------------------- | --------------- |
-| `token` | GITHUB_TOKEN (pull-requests: write) or a repo scoped PAT. | `GITHUB_TOKEN`  |
-| `label` | A label to trigger the action.                            | `add-coauthors` |
+| Name             | Description                                               | Default        |
+|------------------|-----------------------------------------------------------|----------------|
+| `token`          | GITHUB_TOKEN (pull-requests: write) or a repo scoped PAT. | `GITHUB_TOKEN` |
+| `trigger-phrase` | A comment that triggers the action.                       | `!coauthor`    |
