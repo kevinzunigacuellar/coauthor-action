@@ -5,56 +5,58 @@ import type { GH_Response } from "./types.js";
 import { createCoauthorString } from "./utils.js";
 
 async function run() {
-	const prContext = github.context.payload.pull_request;
+	// const prContext = github.context.payload.pull_request;
 	core.debug(github.context.eventName);
 
 	try {
-		if (github.context.payload.comment?.body !== "!coauthors") {
-			core.notice("Skipping, comment does not contain '!coauthors'");
-			return;
-		}
+		// if (github.context.payload.comment?.body !== "!coauthors") {
+		// 	core.notice("Skipping, comment does not contain '!coauthors'");
+		// 	return;
+		// }
 
-		if (!prContext) {
-			core.notice("Skipping, missing pull request context");
-			return;
-		}
+		console.log(github.context)
 
-		const token = core.getInput("token", { required: true });
-		const octokit = github.getOctokit(token);
-		const pr = prContext.number;
-		const author = prContext.user.login;
-		const { owner, repo } = github.context.repo;
+		// if (!prContext) {
+		// 	core.notice("Skipping, missing pull request context");
+		// 	return;
+		// }
 
-		const data: GH_Response = await octokit.graphql(query, {
-			owner,
-			repo,
-			pr,
-		});
+		// const token = core.getInput("token", { required: true });
+		// const octokit = github.getOctokit(token);
+		// const pr = prContext.number;
+		// const author = prContext.user.login;
+		// const { owner, repo } = github.context.repo;
 
-		const participants = (data.repository.pullRequest.participants.nodes ?? [])
-			.map(({ name, login, databaseId }) => ({
-				name,
-				login,
-				id: databaseId,
-			}))
-			// remove the author from the list of participants
-			.filter((p) => p.login !== author);
+		// const data: GH_Response = await octokit.graphql(query, {
+		// 	owner,
+		// 	repo,
+		// 	pr,
+		// });
 
-		if (participants.length === 0) {
-			core.notice("No co-authors found");
-			return;
-		}
-		core.info(`Found ${participants.length} co-authors`);
-		const coauthorString = participants.map(createCoauthorString).join("\n");
-		core.info("Created coauthor string");
-		const commentBody = `\`\`\`\n${coauthorString}\n\`\`\``;
-		const { data: comment } = await octokit.rest.issues.createComment({
-			owner,
-			repo,
-			issue_number: pr,
-			body: commentBody,
-		});
-		core.info(`Created comment id '${comment.id}' on pull request '${pr}'.`);
+		// const participants = (data.repository.pullRequest.participants.nodes ?? [])
+		// 	.map(({ name, login, databaseId }) => ({
+		// 		name,
+		// 		login,
+		// 		id: databaseId,
+		// 	}))
+		// 	// remove the author from the list of participants
+		// 	.filter((p) => p.login !== author);
+
+		// if (participants.length === 0) {
+		// 	core.notice("No co-authors found");
+		// 	return;
+		// }
+		// core.info(`Found ${participants.length} co-authors`);
+		// const coauthorString = participants.map(createCoauthorString).join("\n");
+		// core.info("Created coauthor string");
+		// const commentBody = `\`\`\`\n${coauthorString}\n\`\`\``;
+		// const { data: comment } = await octokit.rest.issues.createComment({
+		// 	owner,
+		// 	repo,
+		// 	issue_number: pr,
+		// 	body: commentBody,
+		// });
+		// core.info(`Created comment id '${comment.id}' on pull request '${pr}'.`);
 	} catch (error) {
 		if (error instanceof Error) core.setFailed(error.message);
 	}
