@@ -30675,6 +30675,7 @@ function createCoauthorString(user) {
 
 async function run() {
     const prContext = github.context.payload.pull_request;
+    console.log("prContext", github.context);
     try {
         if (github.context.payload.comment?.body !== "!coauthors") {
             core.notice("Skipping, comment does not contain '!coauthors'");
