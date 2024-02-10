@@ -5,6 +5,7 @@ permissions:
   
 on:
   issue_comment:
+    types: [created]
       
 jobs:
   generate-coauthor:
