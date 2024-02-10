@@ -1,10 +1,10 @@
 name: coauthor-action
-description: Generate a coauthor commit message
+description: Compile a list of coauthors involved in a pull request and post the "Coauthor-by" string as a comment.
 author: Kevin Zuniga Cuellar
 
 branding:
   icon: 'heart'
-  color: 'red'
+  color: 'purple'
 
 inputs:
   token:
