@@ -4,16 +4,17 @@ permissions:
   pull-requests: write
   
 on:
-  pull_request:
-    types: [labeled]
-    
+  issue_comment:
+    types:
+      - created
+      - edited
+      - deleted
+      
 jobs:
   generate-coauthor:
     name: Generate Coauthor
     runs-on: ubuntu-latest
-
     steps:
-
       - name: Checkout
         uses: actions/checkout@v4
       - name: Generate Coauthor

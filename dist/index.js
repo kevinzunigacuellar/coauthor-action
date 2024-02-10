@@ -30677,14 +30677,15 @@ async function run() {
     const label = core.getInput("label");
     const prContext = github.context.payload.pull_request;
     try {
-        if (github.context.payload.action !== "labeled") {
-            core.notice("Skipping, not a label event");
-            return;
-        }
-        if (github.context.payload.label.name !== label) {
-            core.notice("Skipping, label does not match");
-            return;
-        }
+        // if (github.context.payload.action !== "labeled") {
+        // 	core.notice("Skipping, not a label event");
+        // 	return;
+        // }
+        // if (github.context.payload.label.name !== label) {
+        // 	core.notice("Skipping, label does not match");
+        // 	return;
+        // }
+        console.log("comment", github.context.payload.comment);
         if (!prContext) {
             core.notice("Skipping, missing pull request context");
             return;
@@ -30708,7 +30709,7 @@ async function run() {
             // remove the author from the list of participants
             .filter((p) => p.login !== author);
         if (participants.length === 0) {
-            core.notice("No participants found");
+            core.notice("No co-authors found");
             return;
         }
         core.info(`Found ${participants.length} co-authors`);
