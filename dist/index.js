@@ -30686,6 +30686,7 @@ async function run() {
         // 	return;
         // }
         console.log("comment", github.context.payload.comment);
+        console.log("payload", github.context.payload);
         if (!prContext) {
             core.notice("Skipping, missing pull request context");
             return;
