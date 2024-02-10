@@ -5,10 +5,6 @@ permissions:
   
 on:
   issue_comment:
-    types:
-      - created
-      - edited
-      - deleted
       
 jobs:
   generate-coauthor:
