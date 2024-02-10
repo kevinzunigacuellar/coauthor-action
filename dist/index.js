@@ -30674,18 +30674,12 @@ function createCoauthorString(user) {
 
 
 async function run() {
-    const label = core.getInput("label");
     const prContext = github.context.payload.pull_request;
     try {
-        // if (github.context.payload.action !== "labeled") {
-        // 	core.notice("Skipping, not a label event");
-        // 	return;
-        // }
-        // if (github.context.payload.label.name !== label) {
-        // 	core.notice("Skipping, label does not match");
-        // 	return;
-        // }
-        console.log("comment", github.context.payload.comment);
+        if (github.context.payload.comment?.body !== "!coauthors") {
+            core.notice("Skipping, comment does not contain '!coauthors'");
+            return;
+        }
         if (!prContext) {
             core.notice("Skipping, missing pull request context");
             return;
