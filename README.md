@@ -1,4 +1,4 @@
-# Generate coauthors
+# Generate Co-authors
 
 A GitHub Action that compiles a list of coauthors involved in a pull request and posts the "Coauthor-by" string as a comment.
 
@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: kevinzunigacuellar/coauthor-action@v0.1
+      - uses: kevinzunigacuellar/coauthor-action@v0.1.0
 ```
 
 ## Inputs

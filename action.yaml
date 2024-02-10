@@ -1,4 +1,4 @@
-name: coauthor-action
+name: Generate Co-authors
 description: Compile a list of coauthors involved in a pull request and post the "Coauthor-by" string as a comment.
 author: Kevin Zuniga Cuellar
 
