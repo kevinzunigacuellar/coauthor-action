@@ -6,7 +6,7 @@ import { createCoauthorString } from "./utils.js";
 
 async function run() {
 	const prContext = github.context.payload.pull_request;
-	console.log("prContext", github.context);
+	core.debug(github.context.eventName);
 
 	try {
 		if (github.context.payload.comment?.body !== "!coauthors") {

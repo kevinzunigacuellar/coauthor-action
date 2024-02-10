@@ -10,6 +10,7 @@ on:
 jobs:
   generate-coauthor:
     name: Generate Coauthor
+    if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
