@@ -17,12 +17,25 @@ async function run() {
 	const token = core.getInput("token", { required: true });
 	const octokit = github.getOctokit(token);
 	const pr = github.context.payload.issue?.number;
-	const author = github.context.payload.comment?.user.login;
 	const { owner, repo } = github.context.repo;
 
 	// Check for required context data
-	if (!pr || !author || !owner || !repo) {
-		core.setFailed("Could not get pull request number, author, owner or repo");
+	if (!pr || !owner || !repo) {
+		core.setFailed("Could not get pull request number, owner or repo");
+		return;
+	}
+
+	const { data: prInfo } = await octokit.rest.pulls.get({
+		owner,
+		repo,
+		pull_number: pr,
+	});
+
+	const author = prInfo.user?.login;
+
+	// Check for required context data
+	if (!author) {
+		core.setFailed("Could not get pull request author");
 		return;
 	}
 
