@@ -30649,9 +30649,6 @@ const query = `
 query participants($owner: String!, $repo: String!, $pr: Int!, $first: Int = 100) {
   repository(owner: $owner, name: $repo) {
     pullRequest(number: $pr) {
-      author {
-        login
-      }
       participants(first: $first) {
         nodes {
           name,
@@ -30686,11 +30683,11 @@ async function run() {
     const token = core.getInput("token", { required: true });
     const octokit = github.getOctokit(token);
     const pr = github.context.payload.issue?.number;
-    const author = github.context.payload.comment?.user.login;
+    const author = github.context.payload.issue?.user.login;
     const { owner, repo } = github.context.repo;
     // Check for required context data
     if (!pr || !author || !owner || !repo) {
-        core.setFailed("Could not get pull request number, author, owner or repo");
+        core.setFailed("Could not get pull request number, owner or repo");
         return;
     }
     try {
