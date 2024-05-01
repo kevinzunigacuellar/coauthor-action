@@ -30674,8 +30674,9 @@ function createCoauthorString(user) {
 
 async function run() {
     const triggerPhrase = core.getInput("trigger-phrase");
+    const commentBody = github.context.payload.comment?.body;
     // Check if the comment contains the trigger word
-    if (github.context.payload.comment?.body !== triggerPhrase) {
+    if (commentBody.trim() !== triggerPhrase) {
         core.notice(`Skipping, comment does not contain '${triggerPhrase}'`);
         return;
     }
